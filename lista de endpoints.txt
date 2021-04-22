@@ -1,0 +1,74 @@
+CLIENTES
+/clientes  -> Get - Traer todos los clientes
+/cliente/:idcliente  -> Get - Traer un solo cliente
+/cliente  -> Post - crear un cliente
+/cliente/:idcliente  -> Put - actualizar un cliente
+/cliente/:idcliente  -> Delete - eliminar un cliente
+
+Informacion del Cliente:
+- usuario
+- contraseña
+- Nombre
+- Apellido
+- Correo Electronico
+- Telefono
+- Direccion de Envio
+---------------------------------------------------------------------------------
+
+PEDIDOS
+/pedidos  -> Get - Traer todos las ordenes
+/pedido/:idpedido  -> Get - Traer una sola orden
+/pedido  -> Post - crear una sola orden
+/pedido/:idpedido  -> Put - actulizar una sola orden
+/pedido/:idpedido  -> Delete - eliminar una sola orden
+
+Informacion de PEDIDOS
+- Estado
+    *Nuevo
+    *Confirmado
+    *Preparando
+    *Enviando
+    *Cancelado
+    *Entregado
+
+- Hora 
+- Numero de pedido
+- Descripcion
+- Forma de Pago
+    *Efectivo
+    *Tarjeta de Credito
+- usuario
+- Direccion
+
+
+---------------------------------------------------------------------------------
+DETALLE DE PEDIDO
+/detallepedido/:idpedido  -> Get - Traer todos detalles del pedido
+/detallepedido/:idDetailProduct  -> Get - Traer un detalle de orden
+/detallepedido  -> Post - crear un detalle de orden
+/detallepedido/:idDetailProduct  -> Put - actulizar un detalle de orden
+/detallepedido/:idDetailProduct  -> Delete - eliminar un detalle de orden
+
+Informacion de PEDIDO
+- Foto
+- Descripcion
+- Precio
+- Total
+- Forma de pago
+- Direccion
+- Numero
+
+---------------------------------------------------------------------------------
+
+PRODUCTOS
+/products  -> Get - Traer todos los productos
+/product/:idProduct  -> Get - Traer un solo producto
+/product  -> Post - crear un solo producto
+/product/:idProduct  -> Put - actulizar un solo producto
+/product/:idProduct  -> Delete - eliminar un solo producto
+
+Informacion de PRODUCTOS
+- Foto
+- Descripcion
+- Precio
+
