@@ -1,6 +1,7 @@
 const express = require('express');
 const server = express();
 // const bodyParser = require('body-parser');
+var authentication = require('./authentication');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
@@ -34,7 +35,36 @@ server.get('/cliente/{ID}', (req, res) => {
     res.send('cliente');
 });
 
+
+//Client login
+server.post('/cliente/login', (req, res) => {
+
+    var arg = req.body;
+    var userName = arg.user;
+    var password = arg.password;
+    var isAutenticated = clientes.filter(user => user.user === userName && user.password === password);
+    if (isAutenticated.length > 0) {
+        var data = { userName, password };
+        var token = authentication.generateToken(data);
+        res.send({
+            result: 'OK',
+            token
+        });
+    } else {
+        res.send({
+            result: 'ERROR'
+        });
+    }
+    res.send('cliente');
+});
+
 server.post('/cliente/', (req, res) => {
+    const userverified = authentication.verifyUser(req, res, clientes);
+    if (userverified) {
+        res.send(clientes);
+    } else {
+        res.send('Error: ah ocurrido un problema con el token');
+    }
     res.send('cliente');
 });
 
