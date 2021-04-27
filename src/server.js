@@ -16,7 +16,7 @@ const apiLimiterLogin = rateLimit({
 const port = 3001;
 
 server.use(helmet());
-server.use(bodyParser());
+// server.use(bodyParser());
 server.use('/', apiLimiterLogin);
 
 server.get('/', (req, res) => {
@@ -168,5 +168,5 @@ server.delete('/producto/', (req, res) => {
 // }
 
 server.listen(port, () => {
-    console.log(`servidor correindo en el puerto ${port}`);
+    console.log(`Servidor corriendo en el puerto ${port}`);
 });
