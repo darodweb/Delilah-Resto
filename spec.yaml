@@ -75,6 +75,32 @@ paths:
       responses:
         201:
           description: Cliente creado satisfactoriamente.
+    put:
+      description: Operacion para modificar un cliente existente.
+      tags:
+      - clientes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ID:
+                  type: integer
+                Nombre:
+                  type: string
+                Apellido:
+                  type: string
+                Correo Electronico:
+                  type: string
+                Telefono:
+                  type: integer
+                Direccion de Envio:
+                  type: string
+      responses:
+        201:
+          description: Cliente modificado satisfactoriamente.
   /pedidos:
     get:
       description: Obtiene un listado de clientes
@@ -126,6 +152,46 @@ paths:
       responses:
         201:
           description: Pedido creado satisfactoriamente.
+    put:
+      description: Pedido modificado satisfactoriamente.
+      tags:
+      - pedidos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Articulos:
+                  type: array
+                  items:
+                    properties:
+                      ID:
+                        type: integer
+                      Descripcion:
+                        type: string
+                      Precio:
+                        type: integer
+                      Cantidad:
+                        type: integer
+                Total:
+                  type: integer
+                Estado:
+                  type: string
+                Forma de Pago:
+                  type: string
+                Direccion:
+                  type: string
+                Usuario:
+                  type: string
+                Correo Electronico:
+                  type: string
+                Telefono:
+                  type: integer
+      responses:
+        201:
+          description: Pedido modificado satisfactoriamente.
   /producto/{id}:
     get:
       description: Obtiene el detalle de un producto
@@ -178,6 +244,28 @@ paths:
       responses:
         200:
           description: Articulo creado satisfactoriamente
+    put:
+      description: Modifica un producto existente
+      tags:
+      - productos
+      requestBody:
+        required: true
+        content:
+          appication/json:
+            schema:
+              type: object
+              properties:
+                ID:
+                  type: integer
+                Descripcion:
+                  type: string
+                Foto: 
+                  type: string
+                Precio:
+                  type: integer
+      responses:
+        200:
+          description: Articulo modificado satisfactoriamente
   /pedido/{id}:
     get:
       description: Obtiene un pedido por ID
@@ -236,7 +324,35 @@ paths:
                   type: integer
       responses:
         201:
-          description: Cliente creado satisfactoriamente.
+          description: Usuario creado satisfactoriamente.
+    put:
+      description: Operacion para modificar un usuario.
+      tags:
+      - usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ID:
+                  type: integer
+                Nombre:
+                  type: string
+                Apellido:
+                  type: string
+                Correo Electronico:
+                  type: string
+                Username:
+                  type: string
+                Password:
+                  type: string
+                Telefono:
+                  type: integer
+      responses:
+        201:
+          description: Usuario modificado satisfactoriamente.
   /usuario/{username}:   
     get:
       description: Obtiene un usuario por username

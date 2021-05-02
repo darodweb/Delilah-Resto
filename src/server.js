@@ -23,97 +23,89 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const port = 3001;
 
 //Swagger Configuration
-const swaggerDefinition = {
-  openapi: '3.0.0',
-  info: {
-    title: 'Delilah Resto',
-    version: '1.0.0',
-    description:
-      'Aplicacion REST API que obtiene informacion de clientes, pedidios y productos de la aplicacion Delilah Resto',
-    license: {
-      name:
-        'Licencia MIT',
-      url:
-        'https://spdx.org/licenses/MIT.html',
-    },
-    contact: {
-      nombre:
-        'Daniel Rodriguez',
-    },
-  },
-  servers: [
-    {
-      url: 'http://localhost:3001'
-    },
-  ],
-};
+// const swaggerDefinition = {
+//   openapi: '3.0.0',
+//   info: {
+//     title: 'Delilah Resto',
+//     version: '1.0.0',
+//     description:
+//       'Aplicacion REST API que obtiene informacion de clientes, pedidios y productos de la aplicacion Delilah Resto',
+//     license: {
+//       name:
+//         'Licencia MIT',
+//       url:
+//         'https://spdx.org/licenses/MIT.html',
+//     },
+//     contact: {
+//       nombre:
+//         'Daniel Rodriguez',
+//     },
+//   },
+//   servers: [
+//     {
+//       url: 'http://localhost:3001'
+//     },
+//   ],
+// };
 
-const options = {
-  swaggerDefinition,
-  apis: ['/src/server.js'],
-}
+// const options = {
+//   swaggerDefinition,
+//   apis: ['/src/server.js'],
+// }
 
-const swaggerSpec = swaggerJsDoc(options);
-server.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+// const swaggerSpec = swaggerJsDoc(options);
+// server.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 
-server.get('/', (req, res) => {
-  res.send('Bienvenidos a mi Delilah Resto');
-});
+// server.get('/', (req, res) => {
+//   res.send('Bienvenidos a mi Delilah Resto');
+// });
 
 
 //-------------- CLIENTES Endpoints--------------------------------
 
 var clientes = [];
-/**
- * @swagger
- * /clientes
- *  get:
- *    description: Obtiene listado de clientes
- *    responses:
- *      200:
- *        description: Busqueda exitosa
- */
+
 server.get('/clientes', (req, res) => {
   res.send('Listado de clientes');
 });
 
-// server.get('/cliente/{ID}', (req, res) => {
-//     res.send('cliente');
-// });
+server.get('/cliente/{ID}', (req, res) => {
+  res.send('cliente');
+});
 
 
 //Client login
-// server.post('/cliente/login', (req, res) => {
+server.post('/cliente/login', (req, res) => {
 
-//     var arg = req.body;
-//     var userName = arg.user;
-//     var password = arg.password;
-//     var isAutenticated = clientes.filter(user => user.user === userName && user.password === password);
-//     if (isAutenticated.length > 0) {
-//         var data = { userName, password };
-//         var token = authentication.generateToken(data);
-//         res.send({
-//             result: 'OK',
-//             token
-//         });
-//     } else {
-//         res.send({
-//             result: 'ERROR'
-//         });
-//     }
-//     res.send('cliente');
-// });
+  var arg = req.body;
+  var userName = arg.user;
+  var password = arg.password;
+  var isAutenticated = clientes.filter(user => user.user === userName && user.password === password);
+  if (isAutenticated.length > 0) {
+    var data = { userName, password };
+    var token = authentication.generateToken(data);
+    res.send({
+      result: 'OK',
+      token
+    });
+  } else {
+    res.send({
+      result: 'ERROR'
+    });
+  }
+  res.send('cliente');
+});
 
-// server.post('/cliente/', (req, res) => {
-//     const userverified = authentication.verifyUser(req, res, clientes);
-//     if (userverified) {
-//         res.send(clientes);
-//     } else {
-//         res.send('Error: ah ocurrido un problema con el token');
-//     }
-//     res.send('cliente');
-// });
+server.post('/cliente/', (req, res) => {
+  const userverified = authentication.verifyUser(req, res, clientes);
+  if (userverified) {
+    res.send(clientes);
+  } else {
+    res.send('Error: ah ocurrido un problema con el token');
+  }
+  res.send('cliente');
+});
 
 
 server.put('/cliente', (req, res) => {
