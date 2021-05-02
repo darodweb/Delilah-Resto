@@ -619,9 +619,6 @@ definitions:
         type: string
       message:
         type: string
-externalDocs:
-  description: Find out more about Swagger
-  url: http://swagger.io
 # Added by API Auto Mocking Plugin
 host: virtserver.swaggerhub.com
 basePath: /darodweb12/Delilah_Resto/1.0.0
