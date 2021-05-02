@@ -10,17 +10,19 @@ info:
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+servers:
+  - url: http://delilahresto.com
 tags:
   - name: clientes
   - name: pedidos
-  - name: usuarios
   - name: productos
-servers:
-  - url: http://delilahresto.com
+  - name: usuarios (agregar usuario endpoints)
 paths:
   /clientes:
     get:
       description: Obtiene un listado de clientes
+      tags:
+      - clientes
       responses:
         200:
           description: Resultado satisfactorio
@@ -31,6 +33,8 @@ paths:
   /cliente/{id}:
     get:
       description: Obtiene un cliente por ID
+      tags:
+      - clientes
       parameters:
       - in: path
         name: id
@@ -49,6 +53,8 @@ paths:
   /cliente:              
     post:
       description: Operacion para crear un nuevo cliente.
+      tags:
+      - clientes
       requestBody:
         required: true
         content:
@@ -72,16 +78,90 @@ paths:
   /pedidos:
     get:
       description: Obtiene un listado de clientes
+      tags:
+      - pedidos
       responses:
         200:
           description: Resultado satisfactorio
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/pedidos'        
-  /pedidos/{id}:
+                $ref: '#/components/schemas/pedidos'
+  /pedido:
+    post:
+      description: Pedido creado satisfactoriamente.
+      tags:
+      - pedidos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Articulos:
+                  type: array
+                  items:
+                    properties:
+                      Descripcion:
+                        type: string
+                      Precio:
+                        type: integer
+                      Cantidad:
+                        type: integer
+                Total:
+                  type: integer
+                Estado:
+                  type: string
+                Forma de Pago:
+                  type: string
+                Direccion:
+                  type: string
+                Usuario:
+                  type: string
+                Correo Electronico:
+                  type: string
+                Telefono:
+                  type: integer
+      responses:
+        201:
+          description: Pedido creado satisfactoriamente.
+  /producto/{id}:
+    get:
+      description: Obtiene el detalle de un producto
+      tags:
+      - productos
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        200:
+          description: Resultado satisfactorio
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/productos' 
+  /productos:
+    get:
+      description: Obtiene un listado de productos
+      tags:
+      - productos
+      responses:
+        200:
+          description: Resultado satisfactorio
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/productos' 
+  /pedido/{id}:
     get:
       description: Obtiene un pedido por ID
+      tags:
+      - pedidos
       parameters:
       - in: path
         name: id
@@ -138,23 +218,22 @@ components:
       properties:
         ID:
           type: integer
-          example: 123
-        Foto:
-          type: string
         Articulos:
           type: array
           items:
-            type: array
-            Foto: string
-            Descripcion: string
-            Precio: integer
-        Cantidad:
-          type: integer
+            properties:
+              Foto:
+                type: string
+              Descripcion:
+                type: string
+              Precio:
+                type: integer
+              Cantidad:
+                type: integer
         Total:
           type: integer
         Estado:
           type: string
-          example: Nuevo
         Forma de Pago:
           type: string
         Direccion:
@@ -169,6 +248,8 @@ components:
       type: array
       items:
         properties:
+          ID:
+            type: integer
           Estado:
             type: string
           Hora:
