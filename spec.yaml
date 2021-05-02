@@ -16,7 +16,7 @@ tags:
   - name: clientes
   - name: pedidos
   - name: productos
-  - name: usuarios (agregar usuario endpoints)
+  - name: usuarios
 paths:
   /clientes:
     get:
@@ -144,7 +144,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/productos' 
+                $ref: '#/components/schemas/producto' 
   /productos:
     get:
       description: Obtiene un listado de productos
@@ -152,11 +152,32 @@ paths:
       - productos
       responses:
         200:
-          description: Resultado satisfactorio
+          description: Consulta satisfactoria
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/productos' 
+  /producto:
+    post:
+      description: Crea un nuevo producto
+      tags:
+      - productos
+      requestBody:
+        required: true
+        content:
+          appication/json:
+            schema:
+              type: object
+              properties:
+                Descripcion:
+                  type: string
+                Foto: 
+                  type: string
+                Precio:
+                  type: integer
+      responses:
+        200:
+          description: Articulo creado satisfactoriamente
   /pedido/{id}:
     get:
       description: Obtiene un pedido por ID
@@ -177,7 +198,63 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/pedido'         
-          
+  /usuarios:   
+    get:
+      description: Obtiene un listado de usuarios
+      tags:
+      - usuarios
+      responses:
+        200:
+          description: Resultado satisfactorio
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/usuarios'
+  /usuario:              
+    post:
+      description: Operacion para crear un nuevo usuario.
+      tags:
+      - usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Nombre:
+                  type: string
+                Apellido:
+                  type: string
+                Correo Electronico:
+                  type: string
+                Username:
+                  type: string
+                Password:
+                  type: string
+                Telefono:
+                  type: integer
+      responses:
+        201:
+          description: Cliente creado satisfactoriamente.
+  /usuario/{username}:   
+    get:
+      description: Obtiene un usuario por username
+      tags:
+      - usuarios
+      parameters:
+      - in: path
+        name: username
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Resultado satisfactorio
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/usuarios'
 components:
   schemas:
     cliente:
@@ -185,7 +262,6 @@ components:
       properties:
         ID:
           type: integer
-          example: 123
         Nombre:
           type: string
         Apellido:
@@ -202,7 +278,6 @@ components:
         properties:
           ID:
             type: integer
-            example: 123
           Nombre:
             type: string
           Apellido:
@@ -267,6 +342,8 @@ components:
     producto:
       type: object
       properties:
+        ID:
+          type: integer
         Foto:
           type: string
         Descripcion:
@@ -277,10 +354,28 @@ components:
       type: array
       items:
         properties:
+          ID:
+            type: integer
           Foto:
             type: string
           Descripcion:
             type: string
           Precio:
             type: integer
+    usuarios:
+      type: array
+      items:
+        properties:
+          Username:
+            type: string
+          Nombre:
+            type: string
+          Apellido:
+            type: string
+          Correo Electronico:
+            type: string
+          Telefono:
+            type: integer
+          Rol:
+            type: string
 
