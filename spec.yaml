@@ -17,6 +17,7 @@ tags:
   - name: pedidos
   - name: productos
   - name: usuarios
+  - name: login
 paths:
   /clientes:
     get:
@@ -211,6 +212,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/producto' 
+    delete:
+      description: Elimina un producto
+      tags:
+      - productos
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        200:
+          description: Articulo borrado satisfactoriamente
   /productos:
     get:
       description: Obtiene un listado de productos
@@ -244,6 +259,7 @@ paths:
       responses:
         200:
           description: Articulo creado satisfactoriamente
+
     put:
       description: Modifica un producto existente
       tags:
@@ -322,6 +338,8 @@ paths:
                   type: string
                 Telefono:
                   type: integer
+                Rol:
+                  type: string
       responses:
         201:
           description: Usuario creado satisfactoriamente.
@@ -350,6 +368,8 @@ paths:
                   type: string
                 Telefono:
                   type: integer
+                Rol:
+                  type: string
       responses:
         201:
           description: Usuario modificado satisfactoriamente.
@@ -371,6 +391,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/usuarios'
+  /login:
+    post:
+      description: Login.
+      tags:
+      - login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Username:
+                  type: string
+                Password:
+                  type: string
+      responses:
+        201:
+          description: Inicio de sesion exitoso.
 components:
   schemas:
     cliente:

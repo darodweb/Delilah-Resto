@@ -28,3 +28,27 @@ module.exports.verifyUser = function (req, res, clientes) {
         return false;
     }
 }
+
+//How can I validate rol?
+
+module.exports.verifyAdmin = function (req, res, admin) {
+    var token = req.headers.authorization;
+    if (token) {
+        var decoded = this.decode(token);
+        if (decoded) {
+            var userName = decoded.userName;
+            var password = decoded.password;
+            var rol = decoded.rol;
+
+            var isAutenticated = admin.filter(user =>
+                admin.user === userName && admin.password === password && admin.rol === rol);
+            if (isAutenticated.length > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    } else {
+        return false;
+    }
+}
