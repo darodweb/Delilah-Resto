@@ -1,7 +1,8 @@
 const express = require('express');
 const server = express();
-const swaggerUI = require('swagger-ui-express');
-const swaggerJsDoc = require('swagger-jsdoc');
+var actions = require('./actions');
+const { request } = require('express');
+
 
 const bodyParser = require('body-parser');
 var authentication = require('./authentication');
@@ -26,14 +27,40 @@ const port = 3001;
 
 var clientes = [];
 
-server.get('/clientes', (req, res) => {
-  res.send('Listado de clientes');
+server.get('/users', authentication.verifyUser, async (req, res) => {
+  const users = await actions.get('SELECT * FROM users');
+  res.send(users);
 });
 
-server.get('/cliente/{ID}', (req, res) => {
-  res.send('cliente');
+server.get('/user/:id', authentication.verifyUser, async (req, res) => {
+  const user = await actions.get('SELECT * FROM users WHERE id = :id', { id: req.params.id });
+  res.send(user);
 });
 
+
+server.post('/user', authentication.verifyUser, async (req, res) => {
+  const user = await actions.create(
+    `INSERT INTO users (userName, name, email, phone, address, password) 
+      VALUES (:userName, :name, :email, :phone, :address, :password)`,
+    req.body);
+  res.send(user);
+});
+
+server.put('/user/:id', authentication.verifyUser, async (req, res) => {
+  const user = await actions.update(
+    `UPDATE users SET userName =:userName, name =:name, email =:email, phone=:phone, address=:address, password=:password  
+      WHERE id=:id`,
+    { ...req.body, id: req.params.id });
+  res.send(req.body);
+});
+
+server.delete('/user/:id', authentication.verifyUser, async (req, res) => {
+  const user = await actions.delete(
+    `DELETE FROM users   
+      WHERE id=:id`,
+    { id: req.params.id });
+  res.send(req.body);
+});
 
 //Client login
 server.post('/cliente/login', (req, res) => {
