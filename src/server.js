@@ -3,7 +3,6 @@ const server = express();
 var actions = require('./actions');
 const { request } = require('express');
 
-
 const bodyParser = require('body-parser');
 var authentication = require('./authentication');
 const helmet = require('helmet');
@@ -63,14 +62,14 @@ server.delete('/user/:id', authentication.verifyUser, async (req, res) => {
 });
 
 //Client login
-server.post('/cliente/login', (req, res) => {
-
+server.post('/login', async (req, res) => {
   var arg = req.body;
-  var userName = arg.user;
+  var user = arg.user;
   var password = arg.password;
-  var isAutenticated = clientes.filter(user => user.user === userName && user.password === password);
+  const usuarios = await actions.get('SELECT * FROM users WHERE userName = :user AND password = :password', { user, password })
+  var isAutenticated = usuarios.filter(userf => userf.userName === user && userf.password === password);
   if (isAutenticated.length > 0) {
-    var data = { userName, password };
+    var data = { user, password };
     var token = authentication.generateToken(data);
     res.send({
       result: 'OK',
@@ -81,7 +80,6 @@ server.post('/cliente/login', (req, res) => {
       result: 'ERROR'
     });
   }
-  res.send('cliente');
 });
 
 server.post('/cliente/', (req, res) => {
@@ -177,17 +175,6 @@ server.delete('/producto/', (req, res) => {
   res.send('Producto eliminado');
 });
 
-server.post('/login', (req, res) => {
-  var arg = req.body;
-  var userName = arg.user;
-  var password = arg.password;
-  var isAutenticated = usuarios.filter(user => user.user === userName && user.password === password);
-  if (isAutenticated.length > 0) {
-    res.send('OK');
-  } else {
-    res.send('ERROR');
-  }
-});
 
 // server.post('/register', (req, res) => {
 //     var arg = req.body;
