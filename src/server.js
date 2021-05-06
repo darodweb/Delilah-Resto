@@ -29,7 +29,7 @@ var clientes = [];
 
 server.get('/users', authentication.verifyUser, async (req, res) => {
   const users = await actions.get('SELECT * FROM users');
-  res.send(users);
+  res.send('users');
 });
 
 server.get('/user/:id', authentication.verifyUser, async (req, res) => {
