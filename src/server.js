@@ -24,38 +24,36 @@ const port = 3001;
 
 //-------------- CLIENTES Endpoints--------------------------------
 
-var clientes = [];
-
-server.get('/users', authentication.verifyUser, async (req, res) => {
-  const users = await actions.get('SELECT * FROM users');
-  res.send('users');
+server.get('/usuarios', async (req, res) => {
+  const users = await actions.get('SELECT * FROM usuarios');
+  res.send(users);
+  console.log(users);
 });
 
-server.get('/user/:id', authentication.verifyUser, async (req, res) => {
-  const user = await actions.get('SELECT * FROM users WHERE id = :id', { id: req.params.id });
+server.get('/usuario/:id', authentication.verifyUser, async (req, res) => {
+  const user = await actions.get('SELECT * FROM usuarios WHERE id = :id', { id: req.params.id });
   res.send(user);
 });
 
-
-server.post('/user', authentication.verifyUser, async (req, res) => {
+server.post('/usuario', authentication.verifyUser, async (req, res) => {
   const user = await actions.create(
-    `INSERT INTO users (userName, name, email, phone, address, password) 
-      VALUES (:userName, :name, :email, :phone, :address, :password)`,
+    `INSERT INTO usuarios (username, nombre, correo_electronico, telefono, rol, direccion) 
+      VALUES (:username, :nombre, :correo_electronico, :telefono, :rol, :direccion)`,
     req.body);
   res.send(user);
 });
 
-server.put('/user/:id', authentication.verifyUser, async (req, res) => {
+server.put('/usuario/:id', authentication.verifyUser, async (req, res) => {
   const user = await actions.update(
-    `UPDATE users SET userName =:userName, name =:name, email =:email, phone=:phone, address=:address, password=:password  
-      WHERE id=:id`,
+    `UPDATE usuarios SET username = :username, nombre = :nombre, correo_electronico = :correo_electronico, telefono = :telefono, rol= :rol,  direccion = :direccion  
+      WHERE id = :id`,
     { ...req.body, id: req.params.id });
   res.send(req.body);
 });
 
-server.delete('/user/:id', authentication.verifyUser, async (req, res) => {
+server.delete('/usuario/:id', authentication.verifyUser, async (req, res) => {
   const user = await actions.delete(
-    `DELETE FROM users   
+    `DELETE FROM usuarios   
       WHERE id=:id`,
     { id: req.params.id });
   res.send(req.body);
@@ -66,7 +64,7 @@ server.post('/login', async (req, res) => {
   var arg = req.body;
   var user = arg.user;
   var password = arg.password;
-  const usuarios = await actions.get('SELECT * FROM users WHERE userName = :user AND password = :password', { user, password })
+  const usuarios = await actions.get('SELECT * FROM usuarios WHERE userName = :user AND password = :password', { user, password })
   var isAutenticated = usuarios.filter(userf => userf.userName === user && userf.password === password);
   if (isAutenticated.length > 0) {
     var data = { user, password };
@@ -82,37 +80,37 @@ server.post('/login', async (req, res) => {
   }
 });
 
-server.post('/cliente/', (req, res) => {
-  let userverified = authentication.verifyUser(req, res, clientes);
-  if (userverified) {
-    res.send(clientes);
-  } else {
-    res.send('Error: Ha ocurrido un problema con el token');
-  }
-  res.send('cliente');
-});
+// server.post('/cliente/', (req, res) => {
+//   let userverified = authentication.verifyUser(req, res, clientes);
+//   if (userverified) {
+//     res.send(clientes);
+//   } else {
+//     res.send('Error: Ha ocurrido un problema con el token');
+//   }
+//   res.send('cliente');
+// });
 
 
-server.put('/cliente', (req, res) => {
-  let userverified = authentication.verifyUser(req, res, clientes);
-  if (userverified) {
-    res.send(clientes);
-  } else {
-    res.send('Error: Ha ocurrido un problema con el token');
-  }
-  res.status(201).send();
-});
+// server.put('/cliente', (req, res) => {
+//   let userverified = authentication.verifyUser(req, res, clientes);
+//   if (userverified) {
+//     res.send(clientes);
+//   } else {
+//     res.send('Error: Ha ocurrido un problema con el token');
+//   }
+//   res.status(201).send();
+// });
 
-server.delete('/cliente/', (req, res) => {
-  let userverified = authentication.verifyUser(req, res, clientes);
-  if (userverified) {
-    res.send(clientes);
-  } else {
-    res.send('Error: Ha ocurrido un problema con el token');
-  }
-  res.status(201).send();
-  res.send('cliente');
-});
+// server.delete('/cliente/', (req, res) => {
+//   let userverified = authentication.verifyUser(req, res, clientes);
+//   if (userverified) {
+//     res.send(clientes);
+//   } else {
+//     res.send('Error: Ha ocurrido un problema con el token');
+//   }
+//   res.status(201).send();
+//   res.send('cliente');
+// });
 
 
 //-------------- PEDIDOS Endpoints--------------------------------

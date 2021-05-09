@@ -13,29 +13,27 @@ info:
 servers:
   - url: http://delilahresto.com
 tags:
-  - name: clientes
+  - name: usuarios
   - name: pedidos
   - name: productos
-  - name: usuarios
-  - name: login
 paths:
-  /clientes:
+  /usuarios:
     get:
-      description: Obtiene un listado de clientes
+      description: Obtiene un listado de usuarios
       tags:
-      - clientes
+      - usuarios
       responses:
         200:
           description: Resultado satisfactorio
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/clientes'
-  /cliente/{id}:
+                $ref: '#/components/schemas/usuarios'
+  /usuario/{id}:
     get:
-      description: Obtiene un cliente por ID
+      description: Obtiene un usuario por ID
       tags:
-      - clientes
+      - usuarios
       parameters:
       - in: path
         name: id
@@ -50,12 +48,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/cliente'
-  /cliente:              
+                $ref: '#/components/schemas/usuario'
+  /usuario:              
     post:
-      description: Operacion para crear un nuevo cliente.
+      description: Operacion para crear un nuevo usuario.
       tags:
-      - clientes
+      - usuarios
       requestBody:
         required: true
         content:
@@ -75,11 +73,11 @@ paths:
                   type: string
       responses:
         201:
-          description: Cliente creado satisfactoriamente.
+          description: Usuario creado satisfactoriamente.
     put:
-      description: Operacion para modificar un cliente existente.
+      description: Operacion para modificar un usuario existente.
       tags:
-      - clientes
+      - usuarios
       requestBody:
         required: true
         content:
@@ -101,10 +99,10 @@ paths:
                   type: string
       responses:
         201:
-          description: Cliente modificado satisfactoriamente.
+          description: Usuario modificado satisfactoriamente.
   /pedidos:
     get:
-      description: Obtiene un listado de clientes
+      description: Obtiene un listado de usuarios
       tags:
       - pedidos
       responses:
@@ -212,20 +210,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/producto' 
-    delete:
-      description: Elimina un producto
-      tags:
-      - productos
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            minimum: 1
-      responses:
-        200:
-          description: Articulo borrado satisfactoriamente
   /productos:
     get:
       description: Obtiene un listado de productos
@@ -259,7 +243,6 @@ paths:
       responses:
         200:
           description: Articulo creado satisfactoriamente
-
     put:
       description: Modifica un producto existente
       tags:
@@ -302,117 +285,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/pedido'         
-  /usuarios:   
-    get:
-      description: Obtiene un listado de usuarios
-      tags:
-      - usuarios
-      responses:
-        200:
-          description: Resultado satisfactorio
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/usuarios'
-  /usuario:              
-    post:
-      description: Operacion para crear un nuevo usuario.
-      tags:
-      - usuarios
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                Nombre:
-                  type: string
-                Apellido:
-                  type: string
-                Correo Electronico:
-                  type: string
-                Username:
-                  type: string
-                Password:
-                  type: string
-                Telefono:
-                  type: integer
-                Rol:
-                  type: string
-      responses:
-        201:
-          description: Usuario creado satisfactoriamente.
-    put:
-      description: Operacion para modificar un usuario.
-      tags:
-      - usuarios
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                ID:
-                  type: integer
-                Nombre:
-                  type: string
-                Apellido:
-                  type: string
-                Correo Electronico:
-                  type: string
-                Username:
-                  type: string
-                Password:
-                  type: string
-                Telefono:
-                  type: integer
-                Rol:
-                  type: string
-      responses:
-        201:
-          description: Usuario modificado satisfactoriamente.
-  /usuario/{username}:   
-    get:
-      description: Obtiene un usuario por username
-      tags:
-      - usuarios
-      parameters:
-      - in: path
-        name: username
-        required: true
-        schema:
-          type: string
-      responses:
-        200:
-          description: Resultado satisfactorio
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/usuarios'
-  /login:
-    post:
-      description: Login.
-      tags:
-      - login
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                Username:
-                  type: string
-                Password:
-                  type: string
-      responses:
-        201:
-          description: Inicio de sesion exitoso.
 components:
   schemas:
-    cliente:
+    usuario:
       type: object
       properties:
         ID:
@@ -427,7 +302,9 @@ components:
           type: integer
         Direccion de Envio:
           type: string
-    clientes:
+        Rol:
+          type: string
+    usuarios:
       type: array
       items:
         properties:
@@ -442,6 +319,8 @@ components:
           Telefono:
             type: integer
           Direccion de Envio:
+            type: string
+          Rol:
             type: string
     pedido:
       type: object
@@ -517,20 +396,3 @@ components:
             type: string
           Precio:
             type: integer
-    usuarios:
-      type: array
-      items:
-        properties:
-          Username:
-            type: string
-          Nombre:
-            type: string
-          Apellido:
-            type: string
-          Correo Electronico:
-            type: string
-          Telefono:
-            type: integer
-          Rol:
-            type: string
-
