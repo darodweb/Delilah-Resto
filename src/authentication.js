@@ -17,7 +17,7 @@ module.exports.verifyUser = function (req, res, usuarios) {
         if (decoded) {
             var userName = decoded.username;
             var password = decoded.password;
-            var isAutenticated = usuarios.filter(user => user.user === userName && user.password === password);
+            var isAutenticated = usuarios.filter(user => user.user === username && user.password === password);
             if (isAutenticated.length > 0) {
                 return true;
             } else {
@@ -41,7 +41,7 @@ module.exports.verifyAdmin = function (req, res, admin) {
             var rol = decoded.rol;
 
             var isAutenticated = admin.filter(user =>
-                admin.user === userName && admin.password === password && admin.rol === rol);
+                admin.user === username && admin.password === password && admin.rol === rol);
             if (isAutenticated.length > 0) {
                 return true;
             } else {

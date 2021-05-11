@@ -71,6 +71,10 @@ paths:
                   type: integer
                 Direccion de Envio:
                   type: string
+                Username:
+                  type: string
+                Password:
+                  type: string
       responses:
         201:
           description: Usuario creado satisfactoriamente.
@@ -321,6 +325,10 @@ components:
           Direccion de Envio:
             type: string
           Rol:
+            type: string
+          Username:
+            type: string
+          Password:
             type: string
     pedido:
       type: object
