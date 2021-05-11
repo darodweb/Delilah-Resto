@@ -62,11 +62,11 @@ server.delete('/usuario/:id', authentication.verifyUser, async (req, res) => {
 //Client login
 server.post('/login', async (req, res) => {
   var arg = req.body;
-  var user = arg.user;
+  var user = arg.username;
   var password = arg.password;
   const usuarios = await actions.get('SELECT * FROM usuarios WHERE username = :user AND password = :password', { user, password })
-  var isAutenticated = usuarios.filter(user => user.username === user && user.password === password);
-  if (isAutenticated.length > 0) {
+  // var isAutenticated = usuarios.filter(user => user.username === user && user.password === password);
+  if (usuarios.length > 0) {
     var data = { user, password };
     var token = authentication.generateToken(data);
     res.send({
