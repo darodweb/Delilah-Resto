@@ -5,59 +5,44 @@ const { request } = require('express');
 
 const bodyParser = require('body-parser');
 var authentication = require('./authentication');
+
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDefinition = require('./swaggerDefinition');
+
+const usuarios = require('./routes/usuarios')
+
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
-//Middleware para la gestión del body
-server.use(express.json());
+
 
 //Para limitar el intento de peticion al servidor
 const apiLimiterLogin = rateLimit({
-  max: 10
+  max: 100
 });
 
-server.use(helmet());
-// server.use(bodyParser());
-server.use('/', apiLimiterLogin);
 
 const port = 3001;
 
-//-------------- CLIENTES Endpoints--------------------------------
+const options = {
+  ...swaggerDefinition,
+  apis: ['./src/routes/*.js']
+}
 
-server.get('/usuarios', async (req, res) => {
-  const users = await actions.get('SELECT * FROM usuarios');
-  res.send(users);
-  console.log(users);
-});
+const swaggerSpec = swaggerJsDoc(options);
 
-server.get('/usuario/:id', authentication.verifyUser, async (req, res) => {
-  const user = await actions.get('SELECT * FROM usuarios WHERE id = :id', { id: req.params.id });
-  res.send(user);
-});
 
-server.post('/usuario', authentication.verifyUser, async (req, res) => {
-  const user = await actions.create(
-    `INSERT INTO usuarios (username, nombre, correo_electronico, telefono, rol, direccion) 
-      VALUES (:username, :nombre, :correo_electronico, :telefono, :rol, :direccion)`,
-    req.body);
-  res.send(user);
-});
+//Middlewares
+server.use(helmet());
+// server.use(bodyParser());
+server.use('/', apiLimiterLogin);
+server.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+server.use('/', usuarios);
+//Middleware para la gestión del body
+server.use(express.json());
 
-server.put('/usuario/:id', authentication.verifyUser, async (req, res) => {
-  const user = await actions.update(
-    `UPDATE usuarios SET username = :username, nombre = :nombre, correo_electronico = :correo_electronico, telefono = :telefono, rol= :rol,  direccion = :direccion  
-      WHERE id = :id`,
-    { ...req.body, id: req.params.id });
-  res.send(req.body);
-});
 
-server.delete('/usuario/:id', authentication.verifyUser, async (req, res) => {
-  const user = await actions.delete(
-    `DELETE FROM usuarios   
-      WHERE id=:id`,
-    { id: req.params.id });
-  res.send(req.body);
-});
 
 //Client login
 server.post('/login', async (req, res) => {
