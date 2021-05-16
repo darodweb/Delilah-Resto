@@ -5,7 +5,7 @@ const authentication = require('../authentication');
 
 
 
-//-------------- CLIENTES Endpoints--------------------------------
+//-------------- USUARIOS Endpoints--------------------------------
 
 
 /**
@@ -26,10 +26,10 @@ const authentication = require('../authentication');
  *       200:
  *         description: todos los usuarios del sistema
  */
-router.get('/usuarios', async (req, res) => {
+router.get('/usuarios', authentication.verifyUser, async (req, res) => {
     const users = await actions.get('SELECT * FROM usuarios');
     res.send(users);
-    console.log(users);
+
 });
 
 
@@ -82,6 +82,24 @@ router.post('/usuario', authentication.verifyUser, async (req, res) => {
         req.body);
     res.send(user);
 });
+
+//Endpoints para registrar usuario Admin y usuario Cliente
+
+router.post('/usuarioAdmin', async (req, res) => {
+    const user = await actions.create(
+        `INSERT INTO usuarios (username, nombre, correo_electronico, telefono, rol, direccion, password) VALUES (:username, :nombre, :correo_electronico, :telefono, 1, :direccion, :password)`,
+        req.body);
+    res.send(user);
+
+});
+
+router.post('/usuarioCliente', async (req, res) => {
+    const user = await (
+        `INSERT INTO usuarios (username, nombre, correo_electronico, telefono, rol, direccion, password) VALUES (:username, :nombre, :correo_electronico, :telefono, 2, :direccion, :password)`,
+        req.body);
+    res.send(user);
+});
+
 
 router.put('/usuario/:id', authentication.verifyUser, async (req, res) => {
     const user = await actions.update(

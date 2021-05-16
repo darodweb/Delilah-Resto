@@ -32,15 +32,14 @@ const options = {
 
 const swaggerSpec = swaggerJsDoc(options);
 
-
 //Middlewares
 server.use(helmet());
+server.use(express.json());
 // server.use(bodyParser());
 server.use('/', apiLimiterLogin);
 server.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 server.use('/', usuarios);
 //Middleware para la gestión del body
-server.use(express.json());
 
 
 
