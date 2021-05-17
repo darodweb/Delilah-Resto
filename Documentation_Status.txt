@@ -1,0 +1,5 @@
+- Testear el endpoint /login (if needed)
+
+Endpoints Tested:
+usuarios (all)
+productos (add verifyAdmin middleware to products endpoints)

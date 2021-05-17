@@ -75,13 +75,13 @@ router.get('/usuario/:id', authentication.verifyUser, async (req, res) => {
  *       200:
  *         description: todos los usuarios del sistema
  */
-router.post('/usuario', authentication.verifyUser, async (req, res) => {
-    const user = await actions.create(
-        `INSERT INTO usuarios (username, nombre, correo_electronico, telefono, rol, direccion) 
-        VALUES (:username, :nombre, :correo_electronico, :telefono, :rol, :direccion)`,
-        req.body);
-    res.send(user);
-});
+// router.post('/usuario', authentication.verifyUser, async (req, res) => {
+//     const user = await actions.create(
+//         `INSERT INTO usuarios (username, nombre, correo_electronico, telefono, rol, direccion) 
+//         VALUES (:username, :nombre, :correo_electronico, :telefono, :rol, :direccion)`,
+//         req.body);
+//     res.send(user);
+// });
 
 //Endpoints para registrar usuario Admin y usuario Cliente
 
@@ -89,21 +89,23 @@ router.post('/usuarioAdmin', async (req, res) => {
     const user = await actions.create(
         `INSERT INTO usuarios (username, nombre, correo_electronico, telefono, rol, direccion, password) VALUES (:username, :nombre, :correo_electronico, :telefono, 1, :direccion, :password)`,
         req.body);
-    res.send(user);
+    console.log(user);
+    res.send(`Administrador creado satisfactoriamente.`);
 
 });
 
 router.post('/usuarioCliente', async (req, res) => {
-    const user = await (
+    const user = await actions.create(
         `INSERT INTO usuarios (username, nombre, correo_electronico, telefono, rol, direccion, password) VALUES (:username, :nombre, :correo_electronico, :telefono, 2, :direccion, :password)`,
         req.body);
-    res.send(user);
+    console.log(user);
+    res.send(`Cliente creado satisfactoriamente.`);
 });
 
 
 router.put('/usuario/:id', authentication.verifyUser, async (req, res) => {
     const user = await actions.update(
-        `UPDATE usuarios SET username = :username, nombre = :nombre, correo_electronico = :correo_electronico, telefono = :telefono, rol= :rol,  direccion = :direccion  
+        `UPDATE usuarios SET username = :username, nombre = :nombre, correo_electronico = :correo_electronico, telefono = :telefono, direccion = :direccion  
         WHERE id = :id`,
         { ...req.body, id: req.params.id });
     res.send(req.body);
@@ -111,8 +113,7 @@ router.put('/usuario/:id', authentication.verifyUser, async (req, res) => {
 
 router.delete('/usuario/:id', authentication.verifyUser, async (req, res) => {
     const user = await actions.delete(
-        `DELETE FROM usuarios   
-        WHERE id=:id`,
+        `DELETE FROM usuarios WHERE id=:id`,
         { id: req.params.id });
     res.send(req.body);
 });

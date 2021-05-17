@@ -51,7 +51,7 @@ module.exports.verifyAdmin = function (req, res, admin) {
     }
     var token = req.headers.authorization;
     if (token) {
-        var decoded = this.decode(token);
+        var decoded = decode(token);
         if (decoded) {
             var userName = decoded.userName;
             var password = decoded.password;

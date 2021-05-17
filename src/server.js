@@ -1,7 +1,7 @@
 const express = require('express');
 const server = express();
 var actions = require('./actions');
-const { request } = require('express');
+// const { request } = require('express');
 
 const bodyParser = require('body-parser');
 var authentication = require('./authentication');
@@ -11,15 +11,15 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerDefinition = require('./swaggerDefinition');
 
 const usuarios = require('./routes/usuarios')
+const productos = require('./routes/productos')
 
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
 
-
 //Para limitar el intento de peticion al servidor
 const apiLimiterLogin = rateLimit({
-  max: 100
+  max: 10000
 });
 
 
@@ -34,14 +34,12 @@ const swaggerSpec = swaggerJsDoc(options);
 
 //Middlewares
 server.use(helmet());
-server.use(express.json());
-// server.use(bodyParser());
+// server.use(express.json());
+server.use(bodyParser());
 server.use('/', apiLimiterLogin);
 server.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
-server.use('/', usuarios);
-//Middleware para la gestión del body
-
-
+server.use('/', usuarios,);
+server.use('/', productos);
 
 //Client login
 server.post('/login', async (req, res) => {
@@ -133,29 +131,7 @@ server.put('/pedido/', (req, res) => {
 });
 
 
-//-------------- PRODUCTOS Endpoints--------------------------------
 
-var productos = [];
-
-server.get('/productos', (req, res) => {
-  res.send('Listado de Platos');
-});
-
-server.get('/producto/{ID}', (req, res) => {
-  res.send('Detalle de producto ID');
-});
-
-server.post('/producto/', (req, res) => {
-  res.send('Crea producto');
-});
-
-server.put('/producto/', (req, res) => {
-  res.send('Producto modificado');
-});
-
-server.delete('/producto/', (req, res) => {
-  res.send('Producto eliminado');
-});
 
 
 // server.post('/register', (req, res) => {
