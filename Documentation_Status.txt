@@ -2,4 +2,4 @@
 
 Endpoints Tested:
 usuarios (all)
-productos (add verifyAdmin middleware to products endpoints)
+productos (all)
