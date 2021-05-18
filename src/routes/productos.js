@@ -16,7 +16,7 @@ router.get('/producto/:id', authentication.verifyUser, async (req, res) => {
     res.send(producto);
 });
 
-router.post('/producto/', async (req, res) => {
+router.post('/producto/', authentication.verifyAdmin, async (req, res) => {
     const producto = await actions.create(
         `INSERT INTO productos (foto, descripcion, precio) VALUES (:foto, :descripcion, :precio)`,
         req.body);
@@ -24,17 +24,19 @@ router.post('/producto/', async (req, res) => {
     res.send(`Producto creado satisfactoriamente.`);
 });
 
-router.put('/producto/:id', async (req, res) => {
+router.put('/producto/:id', authentication.verifyAdmin, async (req, res) => {
     const producto = await actions.update(
         `UPDATE productos SET foto = :foto, descripcion = :descripcion, precio = :precio WHERE id = :id`,
         { ...req.body, id: req.params.id });
-    console.log(producto);
     res.send('Producto actualizado satisfactoriamente');
 
 });
 
-router.delete('/producto/', (req, res) => {
-    res.send('Producto eliminado');
+router.delete('/producto/:id', authentication.verifyAdmin, async (req, res) => {
+    const producto = await actions.delete(
+        `DELETE FROM productos WHERE id = :id`,
+        { id: req.params.id });
+    res.send('Producto eliminado satisfactoriamente');
 });
 
 module.exports = router;

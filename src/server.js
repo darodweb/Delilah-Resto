@@ -10,8 +10,9 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDefinition = require('./swaggerDefinition');
 
-const usuarios = require('./routes/usuarios')
-const productos = require('./routes/productos')
+const usuarios = require('./routes/usuarios');
+const productos = require('./routes/productos');
+const pedidos = require('./routes/pedidos');
 
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
@@ -21,7 +22,6 @@ const rateLimit = require('express-rate-limit');
 const apiLimiterLogin = rateLimit({
   max: 10000
 });
-
 
 const port = 3001;
 
@@ -40,6 +40,7 @@ server.use('/', apiLimiterLogin);
 server.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 server.use('/', usuarios,);
 server.use('/', productos);
+server.use('/', pedidos);
 
 //Client login
 server.post('/login', async (req, res) => {
@@ -95,40 +96,39 @@ server.post('/login', async (req, res) => {
 // });
 
 
-//-------------- PEDIDOS Endpoints--------------------------------
-
-var pedidos = [];
+// //-------------- PEDIDOS Endpoints--------------------------------
 
 
-server.get('/pedidos', (req, res) => {
-  res.send('Listado de Pedidos');
-});
 
-server.get('/pedido/{ID}', (req, res) => {
-  res.send('Detalle de pedido ID');
-});
+// server.get('/pedidos', (req, res) => {
+//   res.send('Listado de Pedidos');
+// });
 
-server.post('/pedido/', (req, res) => {
-  let userverified = authentication.verifyUser(req, res, clientes);
-  if (userverified) {
-    res.send(clientes);
-  } else {
-    res.send('Error: Ha ocurrido un problema con el token');
-  }
-  res.status(201).send();
-  res.send('Crea pedido');
-});
+// server.get('/pedido/{ID}', (req, res) => {
+//   res.send('Detalle de pedido ID');
+// });
 
-server.put('/pedido/', (req, res) => {
-  let userverified = authentication.verifyUser(req, res, clientes);
-  if (userverified) {
-    res.send(clientes);
-  } else {
-    res.send('Error: Ha ocurrido un problema con el token');
-  }
-  res.status(201).send();
-  res.send('Pedido modificado');
-});
+// server.post('/pedido/', (req, res) => {
+//   let userverified = authentication.verifyUser(req, res, clientes);
+//   if (userverified) {
+//     res.send(clientes);
+//   } else {
+//     res.send('Error: Ha ocurrido un problema con el token');
+//   }
+//   res.status(201).send();
+//   res.send('Crea pedido');
+// });
+
+// server.put('/pedido/', (req, res) => {
+//   let userverified = authentication.verifyUser(req, res, clientes);
+//   if (userverified) {
+//     res.send(clientes);
+//   } else {
+//     res.send('Error: Ha ocurrido un problema con el token');
+//   }
+//   res.status(201).send();
+//   res.send('Pedido modificado');
+// });
 
 
 
