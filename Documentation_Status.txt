@@ -1,5 +1,18 @@
-- Testear el endpoint /login (if needed)
+- Crear /register/user
+- Crear /register/admin
+- Crear ReadME
 
 Endpoints Tested:
 usuarios (all)
 productos (all)
+pedidos (pending)
+
+
+SELECT est.id AS ESTADO, p.hora AS HORA, p.id AS NUMERO, p.id AS DESCRIPCION,
+fp.id AS METODO_DE_PAGO, p.total AS TOTAL, u.nombre AS USUARIO,
+u.direccion AS DIRECCION FROM pedidos AS p
+INNER JOIN usuarios AS u ON pedidos.usuario_id = u.id
+INNER JOIN forma_de_pago as fp ON pedidos.forma_de_pago = fp.id
+INNER JOIN estados as est ON pedidos.estado = est.id;
+
+
