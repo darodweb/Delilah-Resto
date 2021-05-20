@@ -1,6 +1,14 @@
 - Crear /register/user
 - Crear /register/admin
 - Crear ReadME
+- Revision de documentacion
+- Crear get /pedidos DONE
+- Crear get /pedidos/:id  DONE
+- Crear post /pedido
+- Crear put /pedido/id 
+- Crear delete /pedido/id
+
+
 
 Endpoints Tested:
 usuarios (all)

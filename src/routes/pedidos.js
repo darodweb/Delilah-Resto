@@ -16,7 +16,15 @@ router.get('/pedidos', authentication.verifyUser, async (req, res) => {
 
 
 router.get('/pedido/:id', authentication.verifyUser, async (req, res) => {
-    const pedido = await actions.get('SELECT * FROM pedidos WHERE id = :id', { id: req.params.id });
+    const pedido = await actions.get(`SELECT p.id, pr.descripcion as Articulo, pr.precio as Precio,
+    u.nombre as Usuario, f.descripcion as Forma_de_Pago, e.descripcion as Estado,
+    d.total, p.total as Total 
+    FROM detalle_de_pedido as d 
+    INNER JOIN pedidos as p ON (p.id = d.id) 
+    INNER JOIN productos as pr ON (pr.id = d.id_producto) 
+    INNER JOIN usuarios as u ON (u.id = p.usuario_id)
+    INNER JOIN forma_de_pago as f ON (f.id = p.forma_de_pago) 
+    INNER JOIN estados as e ON (e.id = p.estado) WHERE id = :id`, { id: req.params.id });
     res.send(pedido);
 });
 
