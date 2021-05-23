@@ -49,6 +49,7 @@ server.post('/login', async (req, res) => {
   var password = arg.password;
   const usuarios = await actions.get('SELECT * FROM usuarios WHERE username = :user AND password = :password', { user, password })
   // var isAutenticated = usuarios.filter(user => user.username === user && user.password === password);
+  // if (Array.isArray(user) && user.length >0)
   if (usuarios.length > 0) {
     var data = { user, password };
     var token = authentication.generateToken(data);

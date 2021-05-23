@@ -106,21 +106,60 @@ paths:
           description: Usuario modificado satisfactoriamente.
   /pedidos:
     get:
-      description: Obtiene un listado de usuarios
+      description: Obtiene un listado de pedidos
+      parameters:
+        - in: header
+          name: token
+          required: true
+          description: Unico para usuarios administradores
+          schema:
+            type: string
       tags:
       - pedidos
       responses:
         200:
           description: Resultado satisfactorio
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/pedidos'
+        400:
+          description: Error al conectarse con la base de datos.
+        401:
+          description: No tiene permisos para realizar esta consulta.
+      produces:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Id del pedido
+              Estado:
+                type: string
+              Hora:
+                type: string
+              Numero:
+                type: string
+              Descripcion:
+                type: string
+                description: Detalle del pedido
+              Total:
+                type: integer
+              Usuario_id:
+                type: string
+              Forma de pago:
+                type: integer
+                descripcion: Codigo de la forma de pago.
+              Direccion:
+                type: string
+        
   /pedido:
     post:
-      description: Pedido creado satisfactoriamente.
+      description: Crea un nuevo pedido.
       tags:
       - pedidos
+      parameters:
+        - in: header
+          name: token
+          required: true
+          description: Indentificador unico
       requestBody:
         required: true
         content:
@@ -128,30 +167,26 @@ paths:
             schema:
               type: object
               properties:
-                Articulos:
-                  type: array
-                  items:
-                    properties:
-                      Descripcion:
-                        type: string
-                      Precio:
-                        type: integer
-                      Cantidad:
-                        type: integer
-                Total:
+                forma_de_pago:
+                  example: 1
                   type: integer
-                Estado:
-                  type: string
-                Forma de Pago:
-                  type: string
-                Direccion:
-                  type: string
-                Usuario:
-                  type: string
-                Correo Electronico:
-                  type: string
-                Telefono:
+                  description: efectivo = 1, tarjeta de debito = 2, tarjeta de credito = 3
+                producto:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    descripcion:
+                      type: string
+                      example: Hamburguesa Doble
+                    cantidad:
+                      type: integer
+                total:
                   type: integer
+                  example: 850
+                direccion:
+                  type: string
+                  example: "Casa 1 entre calles 1 y 2"
       responses:
         201:
           description: Pedido creado satisfactoriamente.
