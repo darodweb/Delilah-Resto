@@ -172,15 +172,17 @@ paths:
                   type: integer
                   description: efectivo = 1, tarjeta de debito = 2, tarjeta de credito = 3
                 producto:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    descripcion:
-                      type: string
-                      example: Hamburguesa Doble
-                    cantidad:
-                      type: integer
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      descripcion:
+                        type: string
+                        example: Hamburguesa Doble
+                      cantidad:
+                        type: integer
                 total:
                   type: integer
                   example: 850
