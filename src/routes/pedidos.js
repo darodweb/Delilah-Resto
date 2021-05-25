@@ -14,7 +14,7 @@ router.get('/pedidos', authentication.verifyAdmin, async (req, res) => {
     res.send(pedidos);
 });
 
-
+//VERIFY. Issue: Returning empty array
 router.get('/pedido/:id', authentication.verifyUser, async (req, res) => {
     const pedido = await actions.get(`SELECT p.id, pr.descripcion as Articulo, pr.precio as Precio,
     u.nombre as Usuario, f.descripcion as Forma_de_Pago, e.descripcion as Estado,
@@ -24,13 +24,14 @@ router.get('/pedido/:id', authentication.verifyUser, async (req, res) => {
     INNER JOIN productos as pr ON (pr.id = d.id_producto) 
     INNER JOIN usuarios as u ON (u.id = p.usuario_id)
     INNER JOIN forma_de_pago as f ON (f.id = p.forma_de_pago) 
-    INNER JOIN estados as e ON (e.id = p.estado) WHERE id = :id`, { id: req.params.id });
+    INNER JOIN estados as e ON (e.id = p.estado)`, { id: req.params.id });
     res.send(pedido);
 });
 
 router.post('/pedido/', authentication.verifyUser, async (req, res) => {
     const orden = req.body
     console.log(orden);
+    console.log(orden.direccion);
     const formaDePago = Number(orden.forma_de_pago);
     const currentUsername = String(req.user.user);
     const currentUserPassword = String(req.user.password);
@@ -40,8 +41,8 @@ router.post('/pedido/', authentication.verifyUser, async (req, res) => {
         `INSERT INTO pedidos (forma_de_pago, usuario_id) VALUES (:forma_de_pago, :usuario_id)`,
         { forma_de_pago: formaDePago, usuario_id: user[0].id });
 
-    const orderId = submittedOrder[0]
-    console.log(orden.producto.descripcion);
+    const orderId = submittedOrder[0];
+    console.log(`Order ID is ${orderId}`);
 
     // Insertar productos aqui (recorrer array de productos) y por cada resultado hacer un inserte.
     // for (var productos in orden) {
@@ -55,6 +56,7 @@ router.post('/pedido/', authentication.verifyUser, async (req, res) => {
     //     };
     // };
     let productArray = orden.producto;
+    console.log(productArray);
     productArray.forEach(element => {
         var productosRespuesta = actions.create(`
                 INSERT INTO detalle_de_pedido (id, id_producto, cantidad)
@@ -74,25 +76,25 @@ router.post('/pedido/', authentication.verifyUser, async (req, res) => {
       GROUP BY de.id`,
         { order_id: orderId });
 
-    console.log(dataDeOrdenActualizada.length);
+    console.log(`datadeOrdenActualizada: ${dataDeOrdenActualizada.length}`);
 
     //Actualizar TOTAL y DESCRIPTION en la tabla pedidos
 
     const actualizacionDeOrden = await actions.update(`
-      UPDATE pedidos SET descripcion = :descripcion, total = :total WHERE id = :order_id`,
-        { descripcion: dataDeOrdenActualizada[0].descripcion, total: dataDeOrdenActualizada[0].total, order_id: orderId });
+      UPDATE pedidos SET estado: Nuevo, numero: :order_id, descripcion = :descripcion, total = :total, direccion: :direccion WHERE id = :order_id`,
+        { descripcion: dataDeOrdenActualizada[0].descripcion, total: dataDeOrdenActualizada[0].total, direccion: orden.direccion, order_id: orderId });
 
     if (actualizacionDeOrden[1] == 1) {
-        res.status(201).json({ message: 'Pedido creado satisfactoriamente.', order: req.body });
+        res.status(201).json({ Message: 'Pedido creado satisfactoriamente.', order: req.body });
         return;
     };
 });
 
-router.put('/pedido/:id', authentication.verifyAdmin, async (req, res) => {
+router.put('/pedido/:id/estado/:estado', authentication.verifyAdmin, async (req, res) => {
     const pedido = await actions.update(
-        `UPDATE pedidos SET foto = :foto, descripcion = :descripcion, precio = :precio WHERE id = :id`,
-        { ...req.body, id: req.params.id });
-    res.send('pedido actualizado satisfactoriamente');
+        `UPDATE pedidos SET estado = :estado WHERE id = :id`,
+        { ...req.body, estado: req.params.estado, id: req.params.id });
+    res.status(201).json({ Message: 'Pedido actualizado satisfactoriamente' });
 
 });
 
@@ -100,7 +102,8 @@ router.delete('/pedido/:id', authentication.verifyAdmin, async (req, res) => {
     const pedido = await actions.delete(
         `DELETE FROM pedidos WHERE id = :id`,
         { id: req.params.id });
-    res.send('pedido eliminado satisfactoriamente');
+    res.status(201).json({ Message: 'Pedido eliminado satisfactoriamente' })
+
 });
 
 module.exports = router;

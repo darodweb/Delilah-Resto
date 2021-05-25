@@ -24,3 +24,13 @@ INNER JOIN forma_de_pago as fp ON pedidos.forma_de_pago = fp.id
 INNER JOIN estados as est ON pedidos.estado = est.id;
 
 
+
+
+    ✓ Condición 1: Poder registrar un nuevo usuario.
+    ✓ Condición 2: Un usuario debe poder listar todos los productos disponibles.
+    Condición 3: Un usuario debe poder generar un nuevo pedido al restaurante con un listado de platos que desea.
+    ✓ Condición 4: El usuario con roles de administrador debe poder actualizar el estado del pedido.
+    ✓ Condición 5: Un usuario con rol de administrador debe poder realizar las acciones de creación, edición y eliminación de recursos de productos (CRUD de productos).
+    ✓ Condición 6: Un usuario sin roles de administrador no debe poder crear, editar o eliminar un producto, ni editar o eliminar un pedido. Tampoco debe poder acceder a información de otros usuarios.
+
+
