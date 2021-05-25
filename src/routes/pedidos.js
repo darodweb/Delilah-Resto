@@ -45,6 +45,8 @@ router.post('/pedido/', authentication.verifyUser, async (req, res) => {
     console.log(`Order ID is ${orderId}`);
 
     // Insertar productos aqui (recorrer array de productos) y por cada resultado hacer un inserte.
+
+
     // for (var productos in orden) {
     //     if (productos == "producto") {
     //         console.log(productos)
@@ -55,25 +57,32 @@ router.post('/pedido/', authentication.verifyUser, async (req, res) => {
 
     //     };
     // };
+
+
     let productArray = orden.producto;
     console.log(productArray);
-    productArray.forEach(element => {
-        var productosRespuesta = actions.create(`
-                INSERT INTO detalle_de_pedido (id, id_producto, cantidad)
-                VALUES (:id, :id_producto, :cantidad)`,
+
+    for (const element of productArray) {
+        var productosRespuesta = await actions.create(`
+            INSERT INTO detalle_de_pedido (id, id_producto, cantidad)
+            VALUES (:id, :id_producto, :cantidad)`,
             { id: orderId, id_producto: element.id, cantidad: element.cantidad });
-    }); {
+    }
 
-    };
+    // productArray.forEach(async (element) => {
+    //     var productosRespuesta = await actions.create(`
+    //             INSERT INTO detalle_de_pedido (id, id_producto, cantidad)
+    //             VALUES (:id, :id_producto, :cantidad)`,
+    //         { id: orderId, id_producto: element.id, cantidad: element.cantidad });
+    // });
 
-    //Consultar sumas de los productos y sus nombres.  (CHECK THIS SECTION. dataDeOrdenActualizada is returning empty)
+    //Consultar sumas de los productos y sus nombres.  (CHECK THIS SECTION. dataDeOrdenActualizada is retorna array vacio con el segundo pedido)
 
     const dataDeOrdenActualizada = await actions.get(`
-      SELECT de.id, GROUP_CONCAT(CONCAT(p.descripcion, ' x', de.cantidad) SEPARATOR' ') AS descripcion, SUM(p.precio * de.cantidad) AS total
-      FROM detalle_de_pedido as de
-      INNER JOIN productos AS p ON p.id = de.id_producto
-      WHERE de.id = :order_id 
-      GROUP BY de.id`,
+      SELECT de.id, GROUP_CONCAT(CONCAT(p.descripcion, ' x', de.cantidad) SEPARATOR' ') AS descripcion, SUM(p.precio * de.cantidad) AS total 
+      FROM detalle_de_pedido as de 
+      INNER JOIN productos AS p ON p.id = de.id_producto 
+      WHERE de.id = :order_id GROUP BY de.id`,
         { order_id: orderId });
 
     console.log(`datadeOrdenActualizada: ${dataDeOrdenActualizada.length}`);
@@ -81,7 +90,7 @@ router.post('/pedido/', authentication.verifyUser, async (req, res) => {
     //Actualizar TOTAL y DESCRIPTION en la tabla pedidos
 
     const actualizacionDeOrden = await actions.update(`
-      UPDATE pedidos SET estado: Nuevo, numero: :order_id, descripcion = :descripcion, total = :total, direccion: :direccion WHERE id = :order_id`,
+      UPDATE pedidos SET estado = 1, numero = :order_id, descripcion = :descripcion, total = :total, direccion = :direccion WHERE id = :order_id`,
         { descripcion: dataDeOrdenActualizada[0].descripcion, total: dataDeOrdenActualizada[0].total, direccion: orden.direccion, order_id: orderId });
 
     if (actualizacionDeOrden[1] == 1) {

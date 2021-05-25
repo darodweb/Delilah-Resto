@@ -33,4 +33,8 @@ INNER JOIN estados as est ON pedidos.estado = est.id;
     ✓ Condición 5: Un usuario con rol de administrador debe poder realizar las acciones de creación, edición y eliminación de recursos de productos (CRUD de productos).
     ✓ Condición 6: Un usuario sin roles de administrador no debe poder crear, editar o eliminar un producto, ni editar o eliminar un pedido. Tampoco debe poder acceder a información de otros usuarios.
 
-
+README
+Quickstart
+COmo clonar repo
+COmo se inicia proyecto
+Como se arranca

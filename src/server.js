@@ -42,14 +42,12 @@ server.use('/', usuarios,);
 server.use('/', productos);
 server.use('/', pedidos);
 
-//Client login
+// login
 server.post('/login', async (req, res) => {
   var arg = req.body;
   var user = arg.username;
   var password = arg.password;
   const usuarios = await actions.get('SELECT * FROM usuarios WHERE username = :user AND password = :password', { user, password })
-  // var isAutenticated = usuarios.filter(user => user.username === user && user.password === password);
-  // if (Array.isArray(user) && user.length >0)
   if (usuarios.length > 0) {
     var data = { user, password };
     var token = authentication.generateToken(data);
@@ -64,102 +62,6 @@ server.post('/login', async (req, res) => {
   }
 });
 
-// server.post('/cliente/', (req, res) => {
-//   let userverified = authentication.verifyUser(req, res, clientes);
-//   if (userverified) {
-//     res.send(clientes);
-//   } else {
-//     res.send('Error: Ha ocurrido un problema con el token');
-//   }
-//   res.send('cliente');
-// });
-
-
-// server.put('/cliente', (req, res) => {
-//   let userverified = authentication.verifyUser(req, res, clientes);
-//   if (userverified) {
-//     res.send(clientes);
-//   } else {
-//     res.send('Error: Ha ocurrido un problema con el token');
-//   }
-//   res.status(201).send();
-// });
-
-// server.delete('/cliente/', (req, res) => {
-//   let userverified = authentication.verifyUser(req, res, clientes);
-//   if (userverified) {
-//     res.send(clientes);
-//   } else {
-//     res.send('Error: Ha ocurrido un problema con el token');
-//   }
-//   res.status(201).send();
-//   res.send('cliente');
-// });
-
-
-// //-------------- PEDIDOS Endpoints--------------------------------
-
-
-
-// server.get('/pedidos', (req, res) => {
-//   res.send('Listado de Pedidos');
-// });
-
-// server.get('/pedido/{ID}', (req, res) => {
-//   res.send('Detalle de pedido ID');
-// });
-
-// server.post('/pedido/', (req, res) => {
-//   let userverified = authentication.verifyUser(req, res, clientes);
-//   if (userverified) {
-//     res.send(clientes);
-//   } else {
-//     res.send('Error: Ha ocurrido un problema con el token');
-//   }
-//   res.status(201).send();
-//   res.send('Crea pedido');
-// });
-
-// server.put('/pedido/', (req, res) => {
-//   let userverified = authentication.verifyUser(req, res, clientes);
-//   if (userverified) {
-//     res.send(clientes);
-//   } else {
-//     res.send('Error: Ha ocurrido un problema con el token');
-//   }
-//   res.status(201).send();
-//   res.send('Pedido modificado');
-// });
-
-
-
-
-
-// server.post('/register', (req, res) => {
-//     var arg = req.body;
-
-//     if (!validateEmail(arg.email)) {
-//         res.send("ERROR: el correo no es tiene el formato correcto");
-//     }
-
-//     usuarios.push(arg);
-//     res.send(arg);
-// });
-
-// function validateContraseña(password) {
-//     var Mayusculas = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-//     var Numeros = '1234567890';
-//     var Minusculas = 'abcdefghijklmnopqrstuvwxyz';
-//     for (let index = 0; index < password.length; index++) {
-//         const caracter = password[index];
-//         var contieneMayuscula = Mayusculas.includes(caracter);
-//     }
-// }
-
-// function validateEmail(email) {
-//     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-//     return re.test(String(email).toLowerCase());
-// }
 
 server.listen(port, () => {
   console.log(`Servidor corriendo en el puerto ${port}`);
