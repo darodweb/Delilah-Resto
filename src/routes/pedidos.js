@@ -14,7 +14,6 @@ router.get('/pedidos', authentication.verifyAdmin, async (req, res) => {
     res.send(pedidos);
 });
 
-//VERIFY. Issue: Returning empty array
 router.get('/pedido/:id', authentication.verifyUser, async (req, res) => {
     const pedido = await actions.get(`SELECT p.id, pr.descripcion as Articulo, pr.precio as Precio,
     u.nombre as Usuario, f.descripcion as Forma_de_Pago, e.descripcion as Estado,
@@ -44,21 +43,6 @@ router.post('/pedido/', authentication.verifyUser, async (req, res) => {
     const orderId = submittedOrder[0];
     console.log(`Order ID is ${orderId}`);
 
-    // Insertar productos aqui (recorrer array de productos) y por cada resultado hacer un inserte.
-
-
-    // for (var productos in orden) {
-    //     if (productos == "producto") {
-    //         console.log(productos)
-    //         var productosRespuesta = await actions.create(`
-    //         INSERT INTO detalle_de_pedido (id, id_producto, cantidad)
-    //         VALUES (:id, :id_producto, :cantidad)`,
-    //             { id: orderId, id_producto: orden[productos].id, cantidad: orden[productos].cantidad });
-
-    //     };
-    // };
-
-
     let productArray = orden.producto;
     console.log(productArray);
 
@@ -68,13 +52,6 @@ router.post('/pedido/', authentication.verifyUser, async (req, res) => {
             VALUES (:id, :id_producto, :cantidad)`,
             { id: orderId, id_producto: element.id, cantidad: element.cantidad });
     }
-
-    // productArray.forEach(async (element) => {
-    //     var productosRespuesta = await actions.create(`
-    //             INSERT INTO detalle_de_pedido (id, id_producto, cantidad)
-    //             VALUES (:id, :id_producto, :cantidad)`,
-    //         { id: orderId, id_producto: element.id, cantidad: element.cantidad });
-    // });
 
     //Consultar sumas de los productos y sus nombres.  (CHECK THIS SECTION. dataDeOrdenActualizada is retorna array vacio con el segundo pedido)
 

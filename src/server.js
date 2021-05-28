@@ -1,7 +1,6 @@
 const express = require('express');
 const server = express();
 var actions = require('./actions');
-// const { request } = require('express');
 
 const bodyParser = require('body-parser');
 var authentication = require('./authentication');

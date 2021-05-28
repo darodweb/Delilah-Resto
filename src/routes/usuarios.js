@@ -26,7 +26,7 @@ const authentication = require('../authentication');
  *       200:
  *         description: todos los usuarios del sistema
  */
-router.get('/usuarios', authentication.verifyUser, async (req, res) => {
+router.get('/usuarios', authentication.verifyAdmin, async (req, res) => {
     const users = await actions.get('SELECT * FROM usuarios');
     res.send(users);
 
@@ -51,7 +51,7 @@ router.get('/usuarios', authentication.verifyUser, async (req, res) => {
  *       200:
  *         description: todos los usuarios del sistema
  */
-router.get('/usuario/:id', authentication.verifyUser, async (req, res) => {
+router.get('/usuario/:id', authentication.verifyAdmin, async (req, res) => {
     const user = await actions.get('SELECT * FROM usuarios WHERE id = :id', { id: req.params.id });
     res.send(user);
 });
@@ -75,43 +75,34 @@ router.get('/usuario/:id', authentication.verifyUser, async (req, res) => {
  *       200:
  *         description: todos los usuarios del sistema
  */
-// router.post('/usuario', authentication.verifyUser, async (req, res) => {
-//     const user = await actions.create(
-//         `INSERT INTO usuarios (username, nombre, correo_electronico, telefono, rol, direccion) 
-//         VALUES (:username, :nombre, :correo_electronico, :telefono, :rol, :direccion)`,
-//         req.body);
-//     res.send(user);
-// });
 
 //Endpoints para registrar usuario Admin y usuario Cliente
 
-router.post('/usuarioAdmin', async (req, res) => {
+router.post('/admin', async (req, res) => {
     const user = await actions.create(
         `INSERT INTO usuarios (username, nombre, correo_electronico, telefono, rol, direccion, password) VALUES (:username, :nombre, :correo_electronico, :telefono, 1, :direccion, :password)`,
         req.body);
-    console.log(user);
-    res.send(`Administrador creado satisfactoriamente.`);
+    res.status(201).json({ Message: 'Administrador creado satisfactoriamente.', datos: req.body });
 
 });
 
-router.post('/usuarioCliente', async (req, res) => {
+router.post('/usuario', async (req, res) => {
     const user = await actions.create(
         `INSERT INTO usuarios (username, nombre, correo_electronico, telefono, rol, direccion, password) VALUES (:username, :nombre, :correo_electronico, :telefono, 2, :direccion, :password)`,
         req.body);
-    console.log(user);
-    res.send(`Cliente creado satisfactoriamente.`);
+    res.status(201).json({ Message: 'Usuario creado satisfactoriamente.', datos: req.body });
 });
 
 
-router.put('/usuario/:id', authentication.verifyUser, async (req, res) => {
+router.put('/usuario/:id', authentication.verifyAdmin, async (req, res) => {
     const user = await actions.update(
         `UPDATE usuarios SET username = :username, nombre = :nombre, correo_electronico = :correo_electronico, telefono = :telefono, direccion = :direccion  
         WHERE id = :id`,
         { ...req.body, id: req.params.id });
-    res.send(req.body);
+    res.status(201).json({ Message: 'Usuario modificado satisfactoriamente.', datos: req.body });
 });
 
-router.delete('/usuario/:id', authentication.verifyUser, async (req, res) => {
+router.delete('/usuario/:id', authentication.verifyAdmin, async (req, res) => {
     const user = await actions.delete(
         `DELETE FROM usuarios WHERE id=:id`,
         { id: req.params.id });

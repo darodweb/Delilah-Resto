@@ -20,7 +20,6 @@ router.post('/producto/', authentication.verifyAdmin, async (req, res) => {
     const producto = await actions.create(
         `INSERT INTO productos (foto, descripcion, precio) VALUES (:foto, :descripcion, :precio)`,
         req.body);
-    console.log(producto);
     res.send(`Producto creado satisfactoriamente.`);
 });
 

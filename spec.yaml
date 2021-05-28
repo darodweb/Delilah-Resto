@@ -11,12 +11,33 @@ info:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 servers:
-  - url: http://delilahresto.com
+  - url: http://localhost:3307
 tags:
+  - name: login
   - name: usuarios
   - name: pedidos
   - name: productos
+  - name: admin
 paths:
+  /login:
+    post:
+      description: Operacion para iniciar sesion.
+      tags:
+      - login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        201:
+          description: Usuario creado satisfactoriamente.
   /usuarios:
     get:
       description: Obtiene un listado de usuarios
@@ -49,6 +70,45 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/usuario'
+    put:
+      description: Operacion para modificar un usuario existente.
+      tags:
+      - usuarios
+      parameters:
+      - in: header
+        name: token
+        required: true
+        schema:
+          type: integer
+          format: int64
+          minimum: 1
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+          format: int64
+          minimum: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                nombre:
+                  type: string
+                correo_electronico:
+                  type: string
+                telefono:
+                  type: string
+                direccion:
+                  type: string
+      responses:
+        201:
+          description: Usuario modificado satisfactoriamente.
   /usuario:              
     post:
       description: Operacion para crear un nuevo usuario.
@@ -61,49 +121,22 @@ paths:
             schema:
               type: object
               properties:
-                Nombre:
+                username:
                   type: string
-                Apellido:
+                nombre:
                   type: string
-                Correo Electronico:
+                correo_electronico:
                   type: string
-                Telefono:
+                telefono:
                   type: integer
-                Direccion de Envio:
+                direccion:
                   type: string
-                Username:
+                telefono:
                   type: string
-                Password:
-                  type: string
+
       responses:
         201:
           description: Usuario creado satisfactoriamente.
-    put:
-      description: Operacion para modificar un usuario existente.
-      tags:
-      - usuarios
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                ID:
-                  type: integer
-                Nombre:
-                  type: string
-                Apellido:
-                  type: string
-                Correo Electronico:
-                  type: string
-                Telefono:
-                  type: integer
-                Direccion de Envio:
-                  type: string
-      responses:
-        201:
-          description: Usuario modificado satisfactoriamente.
   /pedidos:
     get:
       description: Obtiene un listado de pedidos
@@ -148,8 +181,30 @@ paths:
                 type: integer
                 descripcion: Codigo de la forma de pago.
               Direccion:
-                type: string
-        
+                type: string    
+  /pedido/{id}/estado/{estado}:
+    put:
+      description: Actualiza el estado de un pedido.
+      tags:
+      - pedidos
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+          format: int64
+          minimum: 1
+      - in: path
+        name: estado
+        required: true
+        schema:
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        201:
+          description: Pedido modificado satisfactoriamente.
   /pedido:
     post:
       description: Crea un nuevo pedido.
@@ -159,7 +214,6 @@ paths:
         - in: header
           name: token
           required: true
-          description: Indentificador unico
       requestBody:
         required: true
         content:
@@ -183,55 +237,12 @@ paths:
                         example: Hamburguesa Doble
                       cantidad:
                         type: integer
-                total:
-                  type: integer
-                  example: 850
                 direccion:
                   type: string
                   example: "Casa 1 entre calles 1 y 2"
       responses:
         201:
           description: Pedido creado satisfactoriamente.
-    put:
-      description: Pedido modificado satisfactoriamente.
-      tags:
-      - pedidos
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                Articulos:
-                  type: array
-                  items:
-                    properties:
-                      ID:
-                        type: integer
-                      Descripcion:
-                        type: string
-                      Precio:
-                        type: integer
-                      Cantidad:
-                        type: integer
-                Total:
-                  type: integer
-                Estado:
-                  type: string
-                Forma de Pago:
-                  type: string
-                Direccion:
-                  type: string
-                Usuario:
-                  type: string
-                Correo Electronico:
-                  type: string
-                Telefono:
-                  type: integer
-      responses:
-        201:
-          description: Pedido modificado satisfactoriamente.
   /producto/{id}:
     get:
       description: Obtiene el detalle de un producto
@@ -250,10 +261,67 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/producto' 
+                $ref: '#/components/schemas/producto'
+    put:
+      description: Modifica un producto existente
+      tags:
+      - productos
+      parameters:
+        - in: header
+          name: token
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          appication/json:
+            schema:
+              type: object
+              properties:
+                foto:
+                  type: string
+                descripcion:
+                  type: string
+                precio:
+                  type: integer
+      responses:
+        200:
+          description: Producto actualizado satisfactoriamente
+    delete:
+      description: Elimina un producto por ID
+      tags:
+      - productos
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+          format: int64
+          minimum: 1
+      - in: header
+        name: token
+        required: true
+        schema:
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        200:
+          description: Producto eliminado satisfactoriamente
   /productos:
     get:
       description: Obtiene un listado de productos
+      parameters:
+        - in: header
+          name: token
+          required: true
       tags:
       - productos
       responses:
@@ -266,6 +334,10 @@ paths:
   /producto:
     post:
       description: Crea un nuevo producto
+      parameters:
+        - in: header
+          name: token
+          required: true      
       tags:
       - productos
       requestBody:
@@ -275,37 +347,15 @@ paths:
             schema:
               type: object
               properties:
-                Descripcion:
+                foto:
                   type: string
-                Foto: 
+                descripcion: 
                   type: string
-                Precio:
+                precio:
                   type: integer
       responses:
         200:
-          description: Articulo creado satisfactoriamente
-    put:
-      description: Modifica un producto existente
-      tags:
-      - productos
-      requestBody:
-        required: true
-        content:
-          appication/json:
-            schema:
-              type: object
-              properties:
-                ID:
-                  type: integer
-                Descripcion:
-                  type: string
-                Foto: 
-                  type: string
-                Precio:
-                  type: integer
-      responses:
-        200:
-          description: Articulo modificado satisfactoriamente
+          description: Producto creado satisfactoriamente
   /pedido/{id}:
     get:
       description: Obtiene un pedido por ID
@@ -319,6 +369,13 @@ paths:
           type: integer
           format: int64
           minimum: 1
+      - in: header
+        name: token
+        required: true
+        schema:
+          type: integer
+          format: int64
+          minimum: 1
       responses:
         200:
           description: Respuesta satisfactoria.
@@ -326,118 +383,133 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/pedido'         
+  /admin:              
+    post:
+      description: Operacion para crear un nuevo administrador.
+      tags:
+      - admin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                nombre:
+                  type: string
+                correo_electronico:
+                  type: string
+                telefono:
+                  type: string
+                direccion:
+                  type: string
+                password:
+                  type: string
+      responses:
+        201:
+          description: Administrador creado satisfactoriamente.            
 components:
   schemas:
     usuario:
       type: object
       properties:
-        ID:
+        id:
           type: integer
-        Nombre:
+        username:
           type: string
-        Apellido:
+        nombre:
           type: string
-        Correo Electronico:
+        correo_electronico:
           type: string
-        Telefono:
+        telefono:
+          type: string
+        rol:
           type: integer
-        Direccion de Envio:
+        direccion:
           type: string
-        Rol:
+        password:
           type: string
     usuarios:
       type: array
       items:
         properties:
-          ID:
+          id:
             type: integer
-          Nombre:
+          username:
             type: string
-          Apellido:
+          nombre:
             type: string
-          Correo Electronico:
+          correo_electronico:
             type: string
-          Telefono:
+          telefono:
+            type: string
+          rol:
             type: integer
-          Direccion de Envio:
+          direccion:
             type: string
-          Rol:
-            type: string
-          Username:
-            type: string
-          Password:
+          password:
             type: string
     pedido:
       type: object
       properties:
-        ID:
+        forma_de_pago:
           type: integer
-        Articulos:
+        producto:
           type: array
           items:
             properties:
-              Foto:
-                type: string
-              Descripcion:
-                type: string
-              Precio:
+              id:
                 type: integer
-              Cantidad:
+              descripcion:
+                type: string
+              cantidad:
                 type: integer
-        Total:
-          type: integer
-        Estado:
+        direccion:
           type: string
-        Forma de Pago:
-          type: string
-        Direccion:
-          type: string
-        Usuario:
-          type: string
-        Correo Electronico:
-          type: string
-        Telefono:
-          type: integer
     pedidos:
       type: array
       items:
         properties:
-          ID:
+          id:
             type: integer
-          Estado:
+          estado:
             type: string
-          Hora:
+          hora:
             type: string
-          Numero:
+          numero:
             type: integer
-          Descripcion:
+          descripcion:
             type: string
-          Total:
+          total:
             type: integer
-          Usuario:
+          usuario_id:
             type: string
-          Direccion:
+          forma_de_pago:
+            type: string
+          direccion:
             type: string
     producto:
       type: object
       properties:
-        ID:
+        id:
           type: integer
-        Foto:
+        foto:
           type: string
-        Descripcion:
+        descripcion:
           type: string
-        Precio:
+        precio:
           type: integer
     productos:
       type: array
       items:
         properties:
-          ID:
+          id:
             type: integer
-          Foto:
+          foto:
             type: string
-          Descripcion:
+          descripcion:
             type: string
-          Precio:
+          precio:
             type: integer
