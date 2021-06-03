@@ -10,7 +10,7 @@ Tecnologias usada: Node.js, Express, MySql
  2. Importar archivo `delilah_resto_db.sql` a la base de datos
  3. Ejecutar el comando `npm install` para instalar todas las dependencias
  4. Iniciar el servidor con el comando `npm start`
- 5. Abrir el navegador en [http://localhost:3307]
+ 5. El servidor está configurado para funcionar en el puerto 3001.  [http://localhost:3001]
  6. La documentacion se encuentra en el archivo `spec.yaml`
 
 ## Recomendaciones de uso
