@@ -76,7 +76,7 @@ paths:
       - usuarios
       parameters:
       - in: header
-        name: token
+        name: authorization
         required: true
         schema:
           type: integer
@@ -131,8 +131,6 @@ paths:
                   type: integer
                 direccion:
                   type: string
-                telefono:
-                  type: string
 
       responses:
         201:
@@ -142,7 +140,7 @@ paths:
       description: Obtiene un listado de pedidos
       parameters:
         - in: header
-          name: token
+          name: authorization
           required: true
           description: Unico para usuarios administradores
           schema:
@@ -212,8 +210,9 @@ paths:
       - pedidos
       parameters:
         - in: header
-          name: token
+          name: authorization
           required: true
+          description: Insertar token
       requestBody:
         required: true
         content:
@@ -268,7 +267,7 @@ paths:
       - productos
       parameters:
         - in: header
-          name: token
+          name: authorization
           required: true
           schema:
             type: integer
@@ -306,7 +305,7 @@ paths:
           format: int64
           minimum: 1
       - in: header
-        name: token
+        name: authorization
         required: true
         schema:
           type: integer
@@ -320,7 +319,7 @@ paths:
       description: Obtiene un listado de productos
       parameters:
         - in: header
-          name: token
+          name: authorization
           required: true
       tags:
       - productos
@@ -336,7 +335,7 @@ paths:
       description: Crea un nuevo producto
       parameters:
         - in: header
-          name: token
+          name: authorization
           required: true      
       tags:
       - productos
@@ -370,7 +369,7 @@ paths:
           format: int64
           minimum: 1
       - in: header
-        name: token
+        name: authorization
         required: true
         schema:
           type: integer
