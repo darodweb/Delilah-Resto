@@ -123,6 +123,8 @@ paths:
               properties:
                 username:
                   type: string
+                password:
+                  type: string
                 nombre:
                   type: string
                 correo_electronico:

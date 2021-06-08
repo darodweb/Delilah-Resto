@@ -84,7 +84,7 @@ router.put('/pedido/:id/estado/:estado', authentication.verifyAdmin, async (req,
 
 });
 
-router.delete('/pedido/:id', authentication.verifyAdmin, async (req, res) => {
+router.delete('/pedido/:id', authentication.verifyUser, async (req, res) => {
     const pedido = await actions.delete(
         `DELETE FROM pedidos WHERE id = :id`,
         { id: req.params.id });
